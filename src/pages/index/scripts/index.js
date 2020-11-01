@@ -1,9 +1,10 @@
 import '../../../styles/index.scss';
 import dominosArray from './data/dominos.json';
-import kfcArray from './data/dominos.json';
-import macArray from './data/dominos.json';
+import kfcArray from './data/kfc.json';
+import macArray from './data/mac.json';
 
 const tabsContent = document.querySelectorAll('.tabs__content')[0];
+const featuredControls = document.querySelectorAll('.featured-item');
 
 class Dish {
   #count;
@@ -23,9 +24,11 @@ class Dish {
   };
 }
 
-const dominosOrder = dominosArray.map(item => new Dish(item));
-const kfcOrder = kfcArray.map(item => new Dish(item));
-const macOrder = macArray.map(item => new Dish(item));
+const orders = {
+  'dominos': dominosArray.map(item => new Dish(item)),
+  'mac': macArray.map(item => new Dish(item)),
+  'kfc': kfcArray.map(item => new Dish(item)),
+};
 
 const dishDishCard = (dish) => `
     <div id="${dish.id}" class="dish">
@@ -45,4 +48,22 @@ const listGenerate = (arr) => arr.reduce((list, dish) => {
   return list;
 }, '');
 
-tabsContent.insertAdjacentHTML('afterbegin', listGenerate(dominosOrder));
+const changeActive = (current, all) => {
+  all.forEach(element => element.classList.remove('active'));
+  current.classList.add('active');
+};
+
+const selectFeatures = (e) => {
+  e.preventDefault();
+  const target = e.currentTarget;
+  const orderType = target.getAttribute("data-featured");
+  changeActive(target, featuredControls);
+  tabsContent.innerHTML = null;
+  tabsContent.insertAdjacentHTML('afterbegin', listGenerate(orders[orderType]));
+};
+
+changeActive(featuredControls[0], featuredControls);
+
+tabsContent.insertAdjacentHTML('afterbegin',  listGenerate(orders['dominos']));
+
+featuredControls.forEach((item) => item.addEventListener('click', selectFeatures));
