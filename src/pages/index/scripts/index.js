@@ -33,6 +33,13 @@ const orders = {
   'mac': macArray.map(item => new Dish(item)),
   'kfc': kfcArray.map(item => new Dish(item)),
 };
+const allDish = Object.values(orders).reduce((acc, restaurant) => {
+  acc = [
+    ...acc,
+    ...restaurant
+  ];
+  return acc;
+},[]);
 
 const createDishCard = (dish) => `
     <div id="${dish.id}" class="dish">
@@ -41,7 +48,7 @@ const createDishCard = (dish) => `
     <div class="dish__info">
       <div class="dish__price">${dish.price}</div>
       <div class="counter" data-id="${dish.id}">
-        <button class="counter__button counter__button--decrease" style="display: none"></button>
+        <button class="counter__button counter__button--decrease" style=${dish.getCount()===0?"display:none":"display:inherit"}></button>
         <span class="counter__number">${dish.getCount()}</span>
         <button class="counter__button counter__button--increase" style="display: inherit"></button>
       </div>
@@ -65,7 +72,8 @@ const selectFeatures = (e) => {
   const orderType = target.getAttribute("data-featured");
   changeActive(target, featuredControls);
   tabsContent.innerHTML = null;
-  tabsContent.insertAdjacentHTML('afterbegin', listGenerate(orders[orderType]));
+  listGenerate(orders[orderType]);
+  setupCounters();
 };
 
 changeActive(featuredControls[0], featuredControls);
@@ -74,8 +82,6 @@ listGenerate(orders['dominos']);
 
 featuredControls.forEach((item) => item.addEventListener('click', selectFeatures));
 
-const dishCounter = document.querySelectorAll('.counter');
-
 const getCounterElements = (counter) => ({
   decrease: counter.querySelector('.counter__button--decrease'),
   number: counter.querySelector('.counter__number'),
@@ -83,7 +89,7 @@ const getCounterElements = (counter) => ({
 });
 
 const shopCountHandler = () => {
-  shopCounter.innerHTML = currentDishList.reduce((acc, dish) => {
+  shopCounter.innerHTML = allDish.reduce((acc, dish) => {
     dish.getCount() && acc++;
     return acc;
   }, 0);
@@ -100,9 +106,14 @@ const handleCounter = (counter, counterElements, operation) => {
   decrease.style.display = `${currentDish.getCount() === 0 ? 'none' : 'inherit'}`;
 };
 
-dishCounter.forEach((counter) => {
-  const counterElements = getCounterElements(counter);
-  const { decrease, increase } = counterElements;
-  decrease.addEventListener('click', () => handleCounter(counter, counterElements, -1));
-  increase.addEventListener('click', () => handleCounter(counter, counterElements, +1));
-});
+const setupCounters = () => {
+  const dishCounter = document.querySelectorAll('.counter');
+  dishCounter.forEach((counter) => {
+    const counterElements = getCounterElements(counter);
+    const { decrease, increase } = counterElements;
+    decrease.addEventListener('click', () => handleCounter(counter, counterElements, -1));
+    increase.addEventListener('click', () => handleCounter(counter, counterElements, +1));
+  });
+};
+
+setupCounters();
