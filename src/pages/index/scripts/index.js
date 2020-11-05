@@ -6,7 +6,7 @@ import macArray from './data/mac.json';
 
 const tabsContent = document.querySelectorAll('.tabs__content')[0];
 const featuredControls = document.querySelectorAll('.featured-item');
-const shopCounter = document.querySelectorAll('.icon-button__badge');
+const shopCounter = document.querySelector('.icon-button__badge');
 let currentDishList = null;
 
 class Dish {
@@ -82,7 +82,12 @@ const getCounterElements = (counter) => ({
   increase: counter.querySelector('.counter__button--increase')
 });
 
-const shopCountHandler = () => shopCounter.innerHTML = currentDishList.reduce((acc, dish) => dish.count && acc++, 0);
+const shopCountHandler = () => {
+  shopCounter.innerHTML = currentDishList.reduce((acc, dish) => {
+    dish.getCount() && acc++;
+    return acc;
+  }, 0);
+};
 
 const handleCounter = (counter, counterElements, operation) => {
   const id = Number(counter.getAttribute("data-id"));
