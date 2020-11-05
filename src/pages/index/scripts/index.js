@@ -2,13 +2,16 @@ import '../../../styles/index.scss';
 import dominosArray from './data/dominos.json';
 import kfcArray from './data/kfc.json';
 import macArray from './data/mac.json';
+//import { createDishCard } from './createDishElement';
 
 const tabsContent = document.querySelectorAll('.tabs__content')[0];
 const featuredControls = document.querySelectorAll('.featured-item');
+const shopCounter = document.querySelectorAll('.icon-button__badge');
+let currentDishList = null;
 
 class Dish {
   #count;
-  constructor({id, price, title, img, count}){
+  constructor({id, price, title, img, count = 0}){
     this.id = id;
     this.price = price;
     this.title = title;
@@ -21,6 +24,7 @@ class Dish {
     if(typeof(number) !== 'number' || number < 0){
       throw new Error('Неверное значение счётчика');
     }
+    this.#count = number;
   };
 }
 
@@ -30,23 +34,25 @@ const orders = {
   'kfc': kfcArray.map(item => new Dish(item)),
 };
 
-const dishDishCard = (dish) => `
+const createDishCard = (dish) => `
     <div id="${dish.id}" class="dish">
     <img class="dish__image" src="${dish.img}" alt="">
     <div class="dish__title">${dish.title}</div>
     <div class="dish__info">
       <div class="dish__price">${dish.price}</div>
-      <div class="counter">
-        <button class="counter__button counter__button--increase"></button>
+      <div class="counter" data-id="${dish.id}">
+        <button class="counter__button counter__button--decrease" style="display: none"></button>
+        <span class="counter__number">${dish.getCount()}</span>
+        <button class="counter__button counter__button--increase" style="display: inherit"></button>
       </div>
     </div>
   </div>
 `;
 
-const listGenerate = (arr) => arr.reduce((list, dish) => {
-  list += dishDishCard(dish);
-  return list;
-}, '');
+const listGenerate = (arr) => {
+  currentDishList = arr;
+  arr.forEach((dish) => tabsContent.insertAdjacentHTML('beforeend',  createDishCard(dish)));
+};
 
 const changeActive = (current, all) => {
   all.forEach(element => element.classList.remove('active'));
@@ -64,6 +70,34 @@ const selectFeatures = (e) => {
 
 changeActive(featuredControls[0], featuredControls);
 
-tabsContent.insertAdjacentHTML('afterbegin',  listGenerate(orders['dominos']));
+listGenerate(orders['dominos']);
 
 featuredControls.forEach((item) => item.addEventListener('click', selectFeatures));
+
+const dishCounter = document.querySelectorAll('.counter');
+
+const getCounterElements = (counter) => ({
+  decrease: counter.querySelector('.counter__button--decrease'),
+  number: counter.querySelector('.counter__number'),
+  increase: counter.querySelector('.counter__button--increase')
+});
+
+const shopCountHandler = () => shopCounter.innerHTML = currentDishList.reduce((acc, dish) => dish.count && acc++, 0);
+
+const handleCounter = (counter, counterElements, operation) => {
+  const id = Number(counter.getAttribute("data-id"));
+  const currentDish = currentDishList.find(dish => dish.id === id);
+  const { decrease, number } = counterElements;
+
+  currentDish.setCount(currentDish.getCount() + operation);
+  number.innerHTML = currentDish.getCount();
+  shopCountHandler();
+  decrease.style.display = `${currentDish.getCount() === 0 ? 'none' : 'inherit'}`;
+};
+
+dishCounter.forEach((counter) => {
+  const counterElements = getCounterElements(counter);
+  const { decrease, increase } = counterElements;
+  decrease.addEventListener('click', () => handleCounter(counter, counterElements, -1));
+  increase.addEventListener('click', () => handleCounter(counter, counterElements, +1));
+});
