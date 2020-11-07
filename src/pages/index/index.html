@@ -52,7 +52,7 @@
             <img class="input__icon" src="img/icons/search.svg" alt="">
             <input class="input__field" type="text" placeholder="Найти что-нибудь вкусное">
           </div>
-          <button class="icon-button icon-button--orange">
+          <button class="icon-button icon-button--orange" id="shopCartButton">
             <img src="img/icons/shopping-cart.svg" alt="">
             <span class="icon-button__badge">0</span>
           </button>
@@ -76,7 +76,7 @@
               </div>
 
               <div class="featured-info__block">
-                <span class="badge badge--orange">бесплатная доставка</span>
+                <span data-delivery-price="0" class="deliveryPrice badge badge--orange">бесплатная доставка</span>
                 <span class="featured-info__icon-item featured-info__icon-item--distance">2,8 км</span>
               </div>
             </div>
@@ -96,7 +96,7 @@
               </div>
 
               <div class="featured-info__block">
-                <span class="badge badge--purple">20 грн доставка</span>
+                <span data-delivery-price="20" class="deliveryPrice badge badge--purple">20 грн доставка</span>
                 <span class="featured-info__icon-item featured-info__icon-item--distance">9,0 км</span>
               </div>
             </div>
@@ -117,7 +117,7 @@
               </div>
 
               <div class="featured-info__block">
-                <span class="badge badge--orange">бесплатная доставка</span>
+                <span data-delivery-price="0" class="deliveryPrice badge badge--orange">бесплатная доставка</span>
                 <span class="featured-info__icon-item featured-info__icon-item--distance">18,6 км</span>
               </div>
             </div>
@@ -139,12 +139,14 @@
   </div>
 
 <!--  add class 'visible' to open drawer-->
-  <div class="overlay">
+  <div id="drawer" class="overlay">
     <div class="drawer">
       <div class="drawer__main">
         <div class="drawer__header">
           <h2 class="h2">Мой заказ <span class="subtitle">(2 наименования)</span></h2>
-          <button class="icon-button"><img src="img/icons/close.svg" alt=""></button>
+          <button class="icon-button" id="closeDrawerButton">
+            <img src="img/icons/close.svg" alt="">
+          </button>
         </div>
 
         <div class="delivery-option">
@@ -153,27 +155,7 @@
         </div>
 
         <h2 class="h2">McDonald’s</h2>
-        <div class="order">
-          <div class="order__item order-item">
-            <img class="order-item__image" src="img/pizza-2.jpg" alt="">
-            <span class="order-item__quantity">1 X</span>
-            <div class="order-item__info">
-              <h3 class="order-item__title h3">Peperoni Pie</h3>
-              <div class="order-item__price">123 грн</div>
-            </div>
-            <button class="icon-button icon-button--red"><img src="img/icons/delete.svg" alt=""></button>
-          </div>
-
-          <div class="order__item order-item">
-            <img class="order-item__image" src="img/pizza-4.jpg" alt="">
-            <span class="order-item__quantity">2 X</span>
-            <div class="order-item__info">
-              <h3 class="order-item__title h3">Cheese Pie</h3>
-              <div class="order-item__price">157 грн</div>
-            </div>
-            <button class="icon-button icon-button--red"><img src="img/icons/delete.svg" alt=""></button>
-          </div>
-        </div>
+        <div class="order" id="order-list"></div>
 
         <button class="add-more">
           <img class="add-more__icon" src="img/icons/plus-purple.svg" alt="">
@@ -184,7 +166,7 @@
           <img src="img/icons/delivery.svg" alt="">
           <div class="delivery-price__info">
             <span class="delivery-price__title">Доставка</span>
-            <span>20 грн</span>
+            <span class="delivery-price__value">20 грн</span>
           </div>
         </div>
 
@@ -194,7 +176,7 @@
             <textarea class="textarea__field" name="comments" id="comments"></textarea>
           </div>
 
-          <button class="button">
+          <button class="button" id="ordersConfirm">
             <span class="button__label">Оформить заказ</span> (303 грн)
           </button>
         </div>
