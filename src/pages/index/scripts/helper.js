@@ -8,4 +8,24 @@ const listGenerate = (list, templateCreator) => list.reduce((list, dish) => {
   return list;
 },'');
 
-export { changeActive, listGenerate };
+const ordersConfirm = (dishList, restaurant) => {
+  const prevOrders = JSON.parse(localStorage.getItem('placedOrders')) || [];
+  const order = {
+    'restaurant': restaurant,
+    'checkout': new Date().toISOString(),
+    'orders': dishList.reduce((list, {id, price, title, getCount}) => {
+      getCount() && list.push({
+        id,
+        price,
+        title,
+        'count': getCount()
+      });
+      return list;
+    }, [])
+  };
+
+  localStorage.setItem('placedOrders', JSON.stringify([...prevOrders, order]));
+  document.location = 'orders.html';
+};
+
+export { changeActive, listGenerate, ordersConfirm };
