@@ -5,7 +5,7 @@ import macArray from './data/mac.json';
 import { createDishCard } from "./templates";
 import { setupCounters, resetCounters } from './counters';
 import { changeActive, listGenerate } from './helper';
-import { drawerToggle, orderListInit, getShoppingCartCount, setShoppingCartCount } from './shopingCart';
+import { drawerToggle, orderCartInit, getShoppingCartCount, setShoppingCartCount, getDeliveryPrice } from './shopingCart';
 
 //variables
 const tabsContent = document.querySelector('.tabs__content');
@@ -44,7 +44,6 @@ const dishListChange = () => {
   setShoppingCartCount(getShoppingCartCount(newDishList));
   tabsContent.insertAdjacentHTML('beforeend', listGenerate(newDishList, createDishCard));
 };
-
 const selectRestaurant = (e) => {
   e.preventDefault();
   const target = e.currentTarget;
@@ -54,11 +53,14 @@ const selectRestaurant = (e) => {
   currentDishList = orders[orderType];
   dishListChange();
   setupCounters(currentDishList);
+  getDeliveryPrice();
 };
 
 //task-4
-shopCartButton.addEventListener('click', () => orderListInit(currentDishList));
+shopCartButton.addEventListener('click', () => orderCartInit(currentDishList));
 closeDrawerButton.addEventListener('click', drawerToggle);
+
+
 
 // First Init
 restaurantButtons.forEach((item) => item.addEventListener('click', selectRestaurant));
