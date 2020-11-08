@@ -1,5 +1,5 @@
 import {listGenerate} from "./helper";
-import {createOrderCard} from "./templates";
+import {createCartElement} from "./templates";
 
 const orderList = document.querySelector('#order-list');
 const drawer = document.querySelector('#drawer');
@@ -26,7 +26,7 @@ const setShoppingPrice = (totalPrice) => orderConfirm.childNodes[2].data = `(${t
 const orderListCreate = (dishList) => {
   orderList.innerHTML = null;
   const selectedOrders = dishList.filter(item => item.getCount() > 0);
-  orderList.insertAdjacentHTML('beforeend', listGenerate(selectedOrders, createOrderCard));
+  orderList.insertAdjacentHTML('beforeend', listGenerate(selectedOrders, createCartElement));
 };
 
 const orderCartInit = (dishList) => {
