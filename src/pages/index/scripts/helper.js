@@ -8,6 +8,7 @@ const listGenerate = (list, templateCreator) => list.reduce((list, dish) => {
   return list;
 },'');
 
+
 const ordersConfirm = (dishList, restaurant) => {
   const prevOrders = JSON.parse(localStorage.getItem('placedOrders')) || [];
   const order = {

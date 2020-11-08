@@ -13,7 +13,7 @@ const createDishCard = (dish) => `
   </div>
 `;
 
-const createOrderCard = (dish) => `
+const createCartElement = (dish) => `
   <div class="order__item order-item">
     <img class="order-item__image" src="${dish.img}" alt="">
     <span class="order-item__quantity">${dish.getCount()}</span>
@@ -25,4 +25,4 @@ const createOrderCard = (dish) => `
   </div>
 `;
 
-export {createDishCard, createOrderCard};
+export { createDishCard, createCartElement };
